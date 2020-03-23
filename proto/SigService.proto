@@ -1,0 +1,20 @@
+syntax = "proto3";
+package sigservice;
+
+message Empty{
+}
+
+message Signable {
+    bytes msg = 1;
+}
+
+message Signed {
+    bytes msg = 1;
+    bytes sig = 2;
+}
+
+
+service Signatures {
+    rpc GetSignable(Empty) returns (Signable) {}
+    rpc ProvideSig(Signed) returns (Empty) {}
+}

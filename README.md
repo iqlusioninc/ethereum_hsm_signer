@@ -1,6 +1,17 @@
 # EthereumSigner
 
-EthereumSigner is an application.
+EthereumSigner is application for use Signatory and it's various backends especially the yubihsm to sign ethereum transactions. It talks to a grpc server whose api is defined in `proto/SigService.proto`.
+
+There are two methods.
+
+```
+    rpc GetSignable(Empty) returns (Signable) {}
+    rpc ProvideSig(Signed) returns (Empty) {}
+```
+
+One gets a messages to sign and the other provides the message back with signature.
+
+
 
 ## Getting Started
 

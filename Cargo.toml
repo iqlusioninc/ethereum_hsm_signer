@@ -13,6 +13,10 @@ yubihsm = { version = "0.32", features = ["secp256k1"] }
 clarity ={git = "https://github.com/iqlusioninc/clarity", branch = "zaki-signatory" }
 ecdsa = "0.4.0"
 zeroize = "1.1.0"
+tonic = "0.1"
+prost = "0.6"
+tokio = { version = "0.2", features = ["macros"] }
+
 
 
 [dependencies.abscissa_core]
@@ -24,4 +28,7 @@ version = "0.5.2"
 [dev-dependencies]
 abscissa_core = { version = "0.5.2", features = ["testing"] }
 once_cell = "1.3"
+
+[build-dependencies]
+tonic-build = "0.1"
 

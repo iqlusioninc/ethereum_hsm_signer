@@ -2,14 +2,14 @@
 
 /// App-local prelude includes `app_reader()`/`app_writer()`/`app_config()`
 /// accessors along with logging macros. Customize as you see fit.
-use crate::prelude::*;
+use crate::{prelude::*,application::APPLICATION};
 use std::{env, fs, path::PathBuf, process::exit};
 use crate::config::EthereumSignerConfig;
 use abscissa_core::{config, Command, FrameworkError, Options, Runnable};
 use clarity::{Address};
 use crate::txsigner::TxSigner;
 use zeroize::Zeroizing;
-
+use crate::sig_service::signatures_client::SignaturesClient;
 
 
 
@@ -31,7 +31,6 @@ pub const COMMITTEE_MEMBER_ADDR: &str = "0x32Be343B94f860124dC4fEe278FDCBD38C102
 /// <https://docs.rs/gumdrop/>
 #[derive(Command, Debug, Options)]
 pub struct StartCmd {
-    /// To whom are we saying hello?
     #[options(free)]
     password_file: Vec<PathBuf>,
 }
@@ -57,11 +56,18 @@ impl Runnable for StartCmd {
             exit(1);
         });
 
-        TxSigner{
-            committee_member: COMMITTEE_MEMBER_ADDR.parse().unwrap(),
-            signer:Box::new(hsm_signer),
-        };
+        abscissa_tokio::run(&APPLICATION, async {
+            let addr = "http://[::1]:50051";
+            let mut client = SignaturesClient::connect(addr).await.unwrap();
+            
+            TxSigner{
+                committee_member: COMMITTEE_MEMBER_ADDR.parse().unwrap(),
+                signer:Box::new(hsm_signer),
+            }.run(&mut client)
+            .await;
 
+        })
+        .unwrap();
     }
 }
 

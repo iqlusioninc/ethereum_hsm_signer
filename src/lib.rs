@@ -21,3 +21,7 @@ pub mod config;
 pub mod error;
 pub mod prelude;
 mod txsigner;
+
+pub mod sig_service {
+    tonic::include_proto!("sigservice");
+}
